@@ -1,47 +1,40 @@
 package br.com.sb.service;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.sb.model.Cliente;
+import br.com.sb.repository.ClienteRepository;
 
 @Service
-public class ClienteService {
-	//simular BD
-	private Map<Integer, Cliente> clientes = new HashMap<>();
-	private Integer nextNumber=1;
+public class ClienteService {	
+	//vamos criar a persistencia com o BD
+	@Autowired
+	ClienteRepository clienteRepository;
 	
 	//Negócio
 	public Cliente constroiCliente(Cliente cliente){
-			
-		cliente.setId(nextNumber);
-		nextNumber++;
-		
-		clientes.put(cliente.getId(), cliente);
-		
-		return cliente;
+		return clienteRepository.save(cliente);
 	}
 	
 	//vamos criar o método busca clientes...
 	public Collection<Cliente> buscarTodos(){
-		return clientes.values();
+		return clienteRepository.findAll();
 	}
 	
 	//vamos criar um método para remover clientes...
 	public void excluir(Cliente cliente){		
-		clientes.remove(cliente.getId());
+		clienteRepository.delete(cliente);
 	}
 	
 	public Cliente buscaPorId(Integer id){
-		return clientes.get(id);
+		return clienteRepository.findOne(id);
 	}
 	
 	//vamos criar um método para alterar
 	public Cliente alterar(Cliente cliente){
-		clientes.put(cliente.getId(), cliente);
-		return cliente;
+		return clienteRepository.save(cliente);
 	}
 }
